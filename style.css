@@ -1275,12 +1275,34 @@ footer {
 @media (max-width: 768px) {
     .navbar { padding: 1.2rem; flex-direction: column; gap: 1.2rem; }
     .nav-links { display: none; }
-    .hero-section .title { font-size: 3.5rem; }
-    .section { padding: 5rem 0; }
-    .countdown { gap: 1.2rem; }
-    .time-box { min-width: 100px; padding: 1.5rem; }
-    .time-box span { font-size: 3rem; }
-    .rsvp-form { padding: 2.5rem 1.8rem; }
+    .hero-section .title { font-size: 4.5rem; }
+    .section { padding: 4rem 0; }
+    .countdown { gap: 1rem; }
+    .time-box { min-width: 80px; padding: 1rem; }
+    .time-box span { font-size: 2.5rem; }
+    .time-box p { font-size: 0.9rem; }
+    .rsvp-form { padding: 2rem 1.5rem; }
     .masonry-gallery { column-count: 1; }
-    .lightbox-close { top: 30px; left: 30px; font-size: 30px; }
+    .lightbox-close { top: 20px; left: 20px; font-size: 25px; }
+    .section-title h2 { font-size: 2.8rem; }
+}
+
+@media (max-width: 480px) {
+    /* Scale down the entire envelope proportionally for small phones */
+    .envelope-wrapper { transform: scale(0.75); }
+    
+    .hero-section .title { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .hero-section .subtitle { font-size: 1.2rem; }
+    .hero-section .date { font-size: 1.2rem; }
+    .hero-frame { padding: 2rem 1rem; max-width: 95%; border-radius: 16px; }
+    .hero-frame::before { top: 8px; bottom: 8px; left: 8px; right: 8px; }
+    
+    .section-title h2 { font-size: 2.2rem; }
+    .detail-card { padding: 2rem 1rem; }
+    
+    .timeline-item.right, .timeline-item.left { padding-right: 35px; }
+    
+    #drawing-board { height: 250px; } /* Smaller canvas height on mobile */
+    .floating-controls { top: 15px; left: 15px; }
+    .control-btn { width: 45px; height: 45px; font-size: 1rem; }
 }
