@@ -584,7 +584,7 @@ const defaultWishes = [
         name: "Laila & Omar",
         date: "07/18/2026",
         type: "text",
-        message: "Wishing you a lifetime of love and happiness! Ahmed & Sara make the most beautiful couple. May God bless your wedding!"
+        message: "Wishing you a lifetime of love and happiness! Ahmed & Walaa make the most beautiful couple. May God bless your wedding!"
     },
     {
         name: "Uncle Youssef",
