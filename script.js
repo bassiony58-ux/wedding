@@ -1,3 +1,8 @@
+// --- Supabase Configuration ---
+const supabaseUrl = 'https://kjueneqrfkjvfryighxh.supabase.co';
+const supabaseKey = 'sb_publishable_wjONHJwXDarPA7vr-WWe9g_Kg6ZClLd';
+const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
 // --- Envelope Opening Animation (GSAP + Confetti) ---
 const envelopeContainer = document.getElementById('envelope-container');
 const envelope = document.querySelector('.envelope');
@@ -423,31 +428,37 @@ const submitWishesBtn = document.getElementById('submit-guestbook-btn');
 const guestNameInput = document.getElementById('guestbook-name');
 const guestTextInput = document.getElementById('guestbook-text');
 
-// Sample default wishes to populate the board beautifully on first load
-const defaultWishes = [
-    {
-        name: "Laila & Omar",
-        date: "07/18/2026",
-        type: "text",
-        message: "Wishing you a lifetime of love and happiness! Ahmed & Walaa make the most beautiful couple. May God bless your wedding!"
-    },
-    {
-        name: "Uncle Youssef",
-        date: "07/19/2026",
-        type: "text",
-        message: "Congratulations! So happy to see you take this beautiful step. Looking forward to celebrating with you in Cairo!"
-    }
-];
+// Fetch wishes from Supabase
+const fetchWishes = async () => {
+    try {
+        const { data, error } = await supabase
+            .from('guestbook')
+            .select('*')
+            .order('created_at', { ascending: false });
 
-const getWishes = () => {
-    const wishes = localStorage.getItem('wedding_wishes');
-    return wishes ? JSON.parse(wishes) : defaultWishes;
+        if (error) throw error;
+
+        // Render data
+        renderWishes(data);
+    } catch (err) {
+        console.error('Error fetching wishes:', err);
+    }
 };
 
-const renderWishes = () => {
+const renderWishes = (wishes) => {
     wishesBoard.innerHTML = '';
-    const wishes = getWishes();
     
+    // Default fallback if no messages
+    if (!wishes || wishes.length === 0) {
+        wishes = [
+            {
+                name: "Laila & Omar",
+                created_at: new Date().toISOString(),
+                message: "Wishing you a lifetime of love and happiness! Ahmed & Walaa make the most beautiful couple. May God bless your wedding!"
+            }
+        ];
+    }
+
     wishes.forEach(wish => {
         const card = document.createElement('div');
         card.className = 'wish-card';
@@ -455,70 +466,107 @@ const renderWishes = () => {
         const randomAngle = (Math.random() * 8 - 4).toFixed(1);
         card.style.setProperty('--angle', randomAngle);
         
-        let bodyHTML = '';
-        if (wish.type === 'text') {
-            bodyHTML = `<p class="wish-card-body">"${wish.message}"</p>`;
-        } else {
-            bodyHTML = `<img src="${wish.message}" class="wish-card-image" alt="Drawn signature">`;
-        }
+        const dateObj = new Date(wish.created_at);
+        const dateStr = dateObj.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
         
         card.innerHTML = `
             <div class="wish-card-header">
                 <span class="wish-card-name">${wish.name}</span>
-                <span class="wish-card-date">${wish.date}</span>
+                <span class="wish-card-date">${dateStr}</span>
             </div>
-            ${bodyHTML}
+            <p class="wish-card-body">"${wish.message}"</p>
         `;
         wishesBoard.appendChild(card);
     });
 };
 
 // Submit Action
-submitWishesBtn.addEventListener('click', () => {
-    const name = guestNameInput.value.trim();
-    if (!name) {
-        alert("Please enter your name to sign the guestbook.");
-        return;
-    }
-    
-    const textMsg = guestTextInput.value.trim();
-    if (!textMsg) {
-        alert("Please type a message before submitting.");
-        return;
-    }
-    
-    const date = new Date().toLocaleDateString('en-US', {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric'
+if (submitWishesBtn) {
+    submitWishesBtn.addEventListener('click', async () => {
+        const name = guestNameInput.value.trim();
+        if (!name) {
+            alert("Please enter your name to sign the guestbook.");
+            return;
+        }
+        
+        const textMsg = guestTextInput.value.trim();
+        if (!textMsg) {
+            alert("Please type a message before submitting.");
+            return;
+        }
+        
+        // Disable button while submitting
+        submitWishesBtn.disabled = true;
+        submitWishesBtn.innerText = "Sending...";
+
+        try {
+            const { error } = await supabase
+                .from('guestbook')
+                .insert([{ name: name, message: textMsg }]);
+
+            if (error) throw error;
+
+            // Clear Form Fields
+            guestNameInput.value = '';
+            guestTextInput.value = '';
+            
+            // Refresh board
+            fetchWishes();
+            
+            // Small celebration burst
+            confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { y: 0.8 }
+            });
+
+            alert("Thank you for your beautiful message!");
+        } catch (err) {
+            console.error('Error submitting wish:', err);
+            alert("Error sending message. Please try again.");
+        } finally {
+            submitWishesBtn.disabled = false;
+            submitWishesBtn.innerText = "Submit Message";
+        }
     });
-    
-    let wishEntry = {
-        name: name,
-        date: date,
-        type: "text",
-        message: textMsg
-    };
-    
-    // Save to list
-    const currentWishes = getWishes();
-    currentWishes.unshift(wishEntry); // Add to the top of list
-    localStorage.setItem('wedding_wishes', JSON.stringify(currentWishes));
-    
-    // Clear Form Fields
-    guestNameInput.value = '';
-    guestTextInput.value = '';
-    
-    // Refresh board
-    renderWishes();
-    
-    // Small celebration burst
-    confetti({
-        particleCount: 50,
-        spread: 60,
-        origin: { y: 0.8 }
-    });
-});
+}
 
 // Render wishes initially on page load
-renderWishes();
+fetchWishes();
+
+// --- RSVP Form Submission Logic ---
+const rsvpForm = document.querySelector('.rsvp-form');
+if (rsvpForm) {
+    rsvpForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const nameInput = rsvpForm.querySelector('input[type="text"]').value.trim();
+        const guestsInput = rsvpForm.querySelector('input[type="number"]').value.trim();
+        const attendanceInput = rsvpForm.querySelector('select').value;
+        const submitBtn = rsvpForm.querySelector('button[type="submit"]');
+
+        submitBtn.disabled = true;
+        submitBtn.innerText = "Submitting...";
+
+        try {
+            const { error } = await supabase
+                .from('rsvps')
+                .insert([{ 
+                    name: nameInput, 
+                    guests: guestsInput, 
+                    attendance: attendanceInput 
+                }]);
+
+            if (error) throw error;
+
+            alert('RSVP Submitted Successfully! Thank you.');
+            rsvpForm.reset();
+        } catch (err) {
+            console.error('Error submitting RSVP:', err);
+            alert('Failed to submit RSVP. Please try again.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit RSVP";
+        }
+    });
+}
