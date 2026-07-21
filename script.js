@@ -1,7 +1,7 @@
 // --- Supabase Configuration ---
 const supabaseUrl = 'https://kjueneqrfkjvfryighxh.supabase.co';
 const supabaseKey = 'sb_publishable_wjONHJwXDarPA7vr-WWe9g_Kg6ZClLd';
-const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
 // --- Envelope Opening Animation (GSAP + Confetti) ---
 const envelopeContainer = document.getElementById('envelope-container');
@@ -431,7 +431,7 @@ const guestTextInput = document.getElementById('guestbook-text');
 // Fetch wishes from Supabase
 const fetchWishes = async () => {
     try {
-        const { data, error } = await supabase
+        const { data, error } = await supabaseClient
             .from('guestbook')
             .select('*')
             .order('created_at', { ascending: false });
@@ -500,7 +500,7 @@ if (submitWishesBtn) {
         submitWishesBtn.innerText = "Sending...";
 
         try {
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('guestbook')
                 .insert([{ name: name, message: textMsg }]);
 
@@ -549,7 +549,7 @@ if (rsvpForm) {
         submitBtn.innerText = "Submitting...";
 
         try {
-            const { error } = await supabase
+            const { error } = await supabaseClient
                 .from('rsvps')
                 .insert([{ 
                     name: nameInput, 
