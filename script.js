@@ -508,7 +508,13 @@ if (submitWishesBtn) {
             formData.append("entry.828079461", textMsg); // نص الرسالة
             formData.append("entry.289404421", "أحمد وولاء"); // أصحاب الدعوة
             
-            const currentDate = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+            const currentDate = new Date().toLocaleString('en-US', { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute:'2-digit' 
+            });
             formData.append("entry.1904164258", currentDate); // التاريخ
 
             try {
