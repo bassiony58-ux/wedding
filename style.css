@@ -1301,7 +1301,7 @@ footer {
         padding-right: 0;
     }
     .timeline-item.right::after, .timeline-item.left::after {
-        left: 28px;
+        left: 19px;
         right: auto;
     }
     
@@ -1342,7 +1342,7 @@ footer {
     .detail-card { padding: 2rem 1rem; }
     
     .timeline-item.right, .timeline-item.left { padding-left: 55px; padding-right: 0; }
-    .timeline-item.right::after, .timeline-item.left::after { left: 22px; }
+    .timeline-item.right::after, .timeline-item.left::after { left: 16px; }
     
     #drawing-board { height: 250px; } /* Smaller canvas height on mobile */
     .floating-controls { top: 15px; left: 15px; }
