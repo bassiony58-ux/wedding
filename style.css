@@ -1288,7 +1288,7 @@ footer {
     
     /* Responsive timeline align items */
     .timeline::after {
-        left: 20px;
+        left: 10px;
         transform: none;
     }
     .timeline-item {
@@ -1301,7 +1301,7 @@ footer {
         padding-right: 0;
     }
     .timeline-item.right::after, .timeline-item.left::after {
-        left: 25px;
+        left: 28px;
         right: auto;
     }
     
@@ -1341,8 +1341,8 @@ footer {
     .section-title h2 { font-size: 2.2rem; }
     .detail-card { padding: 2rem 1rem; }
     
-    .timeline-item.right, .timeline-item.left { padding-left: 45px; padding-right: 0; }
-    .timeline-item.right::after, .timeline-item.left::after { left: 17px; }
+    .timeline-item.right, .timeline-item.left { padding-left: 55px; padding-right: 0; }
+    .timeline-item.right::after, .timeline-item.left::after { left: 22px; }
     
     #drawing-board { height: 250px; } /* Smaller canvas height on mobile */
     .floating-controls { top: 15px; left: 15px; }
