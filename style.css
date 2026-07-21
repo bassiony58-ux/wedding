@@ -1301,7 +1301,7 @@ footer {
         padding-right: 0;
     }
     .timeline-item.right::after, .timeline-item.left::after {
-        left: 4px;
+        left: 25px;
         right: auto;
     }
     
@@ -1342,6 +1342,7 @@ footer {
     .detail-card { padding: 2rem 1rem; }
     
     .timeline-item.right, .timeline-item.left { padding-left: 45px; padding-right: 0; }
+    .timeline-item.right::after, .timeline-item.left::after { left: 17px; }
     
     #drawing-board { height: 250px; } /* Smaller canvas height on mobile */
     .floating-controls { top: 15px; left: 15px; }
