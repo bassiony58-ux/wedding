@@ -1297,12 +1297,12 @@ footer {
     }
     .timeline-item.right, .timeline-item.left {
         align-self: flex-start;
-        padding-left: 0;
-        padding-right: 45px;
+        padding-left: 60px;
+        padding-right: 0;
     }
     .timeline-item.right::after, .timeline-item.left::after {
-        right: 5px;
-        left: auto;
+        left: 4px;
+        right: auto;
     }
     
     .masonry-gallery { column-count: 2; }
@@ -1316,10 +1316,12 @@ footer {
     .nav-links { display: none; }
     .hero-section .title { font-size: 4.5rem; }
     .section { padding: 4rem 0; }
-    .countdown { gap: 1rem; }
-    .time-box { min-width: 80px; padding: 1rem; }
-    .time-box span { font-size: 2.5rem; }
-    .time-box p { font-size: 0.9rem; }
+    .countdown-frame { padding: 2.5rem 1rem; }
+    #countdown-section h2 { font-size: 2.2rem; margin-bottom: 2rem; }
+    .countdown { gap: 0.8rem; }
+    .time-box { min-width: 70px; padding: 1rem 0.5rem; }
+    .time-box span { font-size: 2.2rem; }
+    .time-box p { font-size: 0.8rem; }
     .rsvp-form { padding: 2rem 1.5rem; }
     .masonry-gallery { column-count: 1; }
     .lightbox-close { top: 20px; left: 20px; font-size: 25px; }
@@ -1339,7 +1341,7 @@ footer {
     .section-title h2 { font-size: 2.2rem; }
     .detail-card { padding: 2rem 1rem; }
     
-    .timeline-item.right, .timeline-item.left { padding-right: 35px; }
+    .timeline-item.right, .timeline-item.left { padding-left: 45px; padding-right: 0; }
     
     #drawing-board { height: 250px; } /* Smaller canvas height on mobile */
     .floating-controls { top: 15px; left: 15px; }

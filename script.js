@@ -345,9 +345,7 @@ const initMap = () => {
     const currentTheme = htmlEl.getAttribute('data-theme') || 'light';
     
     tileLayer = L.tileLayer(
-        currentTheme === 'dark' 
-            ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png' 
-            : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
         {
             attribution: '&copy; OpenStreetMap &copy; CartoDB'
         }
@@ -368,17 +366,7 @@ const initMap = () => {
 };
 
 const updateMapTiles = (theme) => {
-    if (tileLayer) {
-        map.removeLayer(tileLayer);
-    }
-    tileLayer = L.tileLayer(
-        theme === 'dark' 
-            ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png' 
-            : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-        {
-            attribution: '&copy; OpenStreetMap &copy; CartoDB'
-        }
-    ).addTo(map);
+    // We rely on CSS filters for dark mode map now, so we don't need to reload tiles
 };
 
 // Initialize Leaflet map immediately
