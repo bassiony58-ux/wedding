@@ -450,13 +450,7 @@ const renderWishes = (wishes) => {
     
     // Default fallback if no messages
     if (!wishes || wishes.length === 0) {
-        wishes = [
-            {
-                name: "Laila & Omar",
-                created_at: new Date().toISOString(),
-                message: "Wishing you a lifetime of love and happiness! Ahmed & Walaa make the most beautiful couple. May God bless your wedding!"
-            }
-        ];
+        return; // Don't render any default messages, keep it empty
     }
 
     wishes.forEach(wish => {
@@ -500,11 +494,35 @@ if (submitWishesBtn) {
         submitWishesBtn.innerText = "Sending...";
 
         try {
+            // 1. Save to Supabase (Database)
             const { error } = await supabaseClient
                 .from('guestbook')
                 .insert([{ name: name, message: textMsg }]);
 
             if (error) throw error;
+
+            // 2. Send Data to Google Forms (For email notifications and spreadsheet tracking)
+            const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdyME-p9fqHgYJ-YAjNuM-bbenTWZc6PnYj1csIQr81Z-kQUg/formResponse";
+            const formData = new URLSearchParams();
+            formData.append("entry.200082116", name); // اسم المرسل
+            formData.append("entry.828079461", textMsg); // نص الرسالة
+            formData.append("entry.289404421", "أحمد وولاء"); // أصحاب الدعوة
+            
+            const currentDate = new Date().toLocaleDateString('ar-EG', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+            formData.append("entry.1904164258", currentDate); // التاريخ
+
+            try {
+                fetch(googleFormUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: formData.toString()
+                });
+            } catch (err) {
+                console.error("Failed to submit to Google Forms", err);
+            }
 
             // Clear Form Fields
             guestNameInput.value = '';
