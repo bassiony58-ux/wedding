@@ -501,12 +501,12 @@ if (submitWishesBtn) {
 
             if (error) throw error;
 
-            // 2. Send Data to Google Forms (For email notifications and spreadsheet tracking)
+            // 2. Send Data to Google Forms (For spreadsheet tracking)
             const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSdyME-p9fqHgYJ-YAjNuM-bbenTWZc6PnYj1csIQr81Z-kQUg/formResponse";
             const formData = new URLSearchParams();
             formData.append("entry.200082116", name); // اسم المرسل
             formData.append("entry.828079461", textMsg); // نص الرسالة
-            formData.append("entry.289404421", "أحمد وولاء"); // أصحاب الدعوة
+            formData.append("entry.289404421", "Ahmed & Walaa"); // أصحاب الدعوة
             
             const currentDate = new Date().toLocaleString('en-US', { 
                 year: 'numeric', 
@@ -528,6 +528,26 @@ if (submitWishesBtn) {
                 });
             } catch (err) {
                 console.error("Failed to submit to Google Forms", err);
+            }
+
+            // 3. Send Data to FormSubmit (For beautifully formatted email notification)
+            try {
+                fetch("https://formsubmit.co/ajax/bassiony58@gmail.com", {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        message: textMsg,
+                        couple: "Ahmed & Walaa",
+                        _subject: "New wedding wish for Ahmed & Walaa",
+                        submittedAt: currentDate
+                    })
+                });
+            } catch(err) {
+                console.error("Failed to submit to FormSubmit", err);
             }
 
             // Clear Form Fields
@@ -557,40 +577,3 @@ if (submitWishesBtn) {
 
 // Render wishes initially on page load
 fetchWishes();
-
-// --- RSVP Form Submission Logic ---
-const rsvpForm = document.querySelector('.rsvp-form');
-if (rsvpForm) {
-    rsvpForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const nameInput = rsvpForm.querySelector('input[type="text"]').value.trim();
-        const guestsInput = rsvpForm.querySelector('input[type="number"]').value.trim();
-        const attendanceInput = rsvpForm.querySelector('select').value;
-        const submitBtn = rsvpForm.querySelector('button[type="submit"]');
-
-        submitBtn.disabled = true;
-        submitBtn.innerText = "Submitting...";
-
-        try {
-            const { error } = await supabaseClient
-                .from('rsvps')
-                .insert([{ 
-                    name: nameInput, 
-                    guests: guestsInput, 
-                    attendance: attendanceInput 
-                }]);
-
-            if (error) throw error;
-
-            alert('RSVP Submitted Successfully! Thank you.');
-            rsvpForm.reset();
-        } catch (err) {
-            console.error('Error submitting RSVP:', err);
-            alert('Failed to submit RSVP. Please try again.');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Submit RSVP";
-        }
-    });
-}
