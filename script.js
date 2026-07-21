@@ -346,7 +346,7 @@ const initMap = () => {
     
     tileLayer = L.tileLayer(
         currentTheme === 'dark' 
-            ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' 
+            ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png' 
             : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
         {
             attribution: '&copy; OpenStreetMap &copy; CartoDB'
@@ -373,7 +373,7 @@ const updateMapTiles = (theme) => {
     }
     tileLayer = L.tileLayer(
         theme === 'dark' 
-            ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png' 
+            ? 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png' 
             : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
         {
             attribution: '&copy; OpenStreetMap &copy; CartoDB'
@@ -428,149 +428,6 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 
 // --- Interactive Guestbook (Drawing Board & Wishes Grid) ---
-
-// Tab Switching
-const tabDrawn = document.getElementById('tab-drawn');
-const tabWritten = document.getElementById('tab-written');
-const panelDrawn = document.getElementById('drawn-content');
-const panelWritten = document.getElementById('written-content');
-
-let activeTab = 'drawn'; // 'drawn' or 'written'
-
-tabDrawn.addEventListener('click', () => {
-    activeTab = 'drawn';
-    tabDrawn.classList.add('active');
-    tabWritten.classList.remove('active');
-    panelDrawn.classList.add('active');
-    panelWritten.classList.remove('active');
-});
-
-tabWritten.addEventListener('click', () => {
-    activeTab = 'written';
-    tabWritten.classList.add('active');
-    tabDrawn.classList.remove('active');
-    panelWritten.classList.add('active');
-    panelDrawn.classList.remove('active');
-});
-
-// Canvas Drawing board logic
-const drawCanvas = document.getElementById('drawing-board');
-const drawCtx = drawCanvas.getContext('2d');
-let isDrawing = false;
-let drawColor = '#000000';
-let drawWidth = 5;
-let colorLabel = 'Black';
-let sizeLabel = 'Medium';
-
-// Set white background on canvas for clean image exporting
-const clearCanvas = () => {
-    drawCtx.fillStyle = '#ffffff';
-    drawCtx.fillRect(0, 0, drawCanvas.width, drawCanvas.height);
-};
-clearCanvas();
-
-// Drawing handlers
-const startDrawing = (e) => {
-    isDrawing = true;
-    drawCtx.beginPath();
-    const coords = getEventCoords(e);
-    drawCtx.moveTo(coords.x, coords.y);
-};
-
-const draw = (e) => {
-    if (!isDrawing) return;
-    const coords = getEventCoords(e);
-    
-    drawCtx.lineWidth = drawWidth;
-    drawCtx.lineCap = 'round';
-    drawCtx.lineJoin = 'round';
-    drawCtx.strokeStyle = drawColor;
-    
-    drawCtx.lineTo(coords.x, coords.y);
-    drawCtx.stroke();
-};
-
-const stopDrawing = () => {
-    isDrawing = false;
-    drawCtx.closePath();
-};
-
-// Get exact coordinates relative to canvas bounding box (supports Mouse & Touch events)
-const getEventCoords = (e) => {
-    const rect = drawCanvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    
-    // Scale client coordinate relative to internal canvas pixels
-    return {
-        x: ((clientX - rect.left) / rect.width) * drawCanvas.width,
-        y: ((clientY - rect.top) / rect.height) * drawCanvas.height
-    };
-};
-
-// Mouse listeners
-drawCanvas.addEventListener('mousedown', startDrawing);
-drawCanvas.addEventListener('mousemove', draw);
-drawCanvas.addEventListener('mouseup', stopDrawing);
-drawCanvas.addEventListener('mouseleave', stopDrawing);
-
-// Touch listeners (Mobile friendly drawing)
-drawCanvas.addEventListener('touchstart', (e) => {
-    e.preventDefault(); // Stop touch scrolling when drawing
-    startDrawing(e);
-});
-drawCanvas.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    draw(e);
-});
-drawCanvas.addEventListener('touchend', stopDrawing);
-
-// Color palette buttons
-document.querySelectorAll('.color-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        drawColor = btn.getAttribute('data-color');
-        
-        // Settings display label
-        const labels = {
-            '#000000': 'Black',
-            '#ff4757': 'Red',
-            '#2ed573': 'Green',
-            '#1e90ff': 'Blue',
-            '#ffa502': 'Orange',
-            '#bfa15f': 'Gold'
-        };
-        colorLabel = labels[drawColor] || 'Custom';
-        updateSettingsText();
-    });
-});
-
-// Width selector buttons
-document.querySelectorAll('.width-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        document.querySelectorAll('.width-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        drawWidth = parseInt(btn.getAttribute('data-width'));
-        
-        const labels = {
-            2: 'Thin',
-            5: 'Medium',
-            10: 'Thick',
-            18: 'Bold'
-        };
-        sizeLabel = labels[drawWidth] || 'Custom';
-        updateSettingsText();
-    });
-});
-
-const updateSettingsText = () => {
-    document.getElementById('current-settings').innerHTML = 
-        `<i class="fa-solid fa-paintbrush"></i> Color: ${colorLabel} | Size: ${sizeLabel}`;
-};
-
-// Clear Board Button
-document.getElementById('clear-canvas-btn').addEventListener('click', clearCanvas);
 
 // Wishes Board Rendering & Save Logic
 const wishesBoard = document.getElementById('wishes-board');
@@ -636,6 +493,12 @@ submitWishesBtn.addEventListener('click', () => {
         return;
     }
     
+    const textMsg = guestTextInput.value.trim();
+    if (!textMsg) {
+        alert("Please type a message before submitting.");
+        return;
+    }
+    
     const date = new Date().toLocaleDateString('en-US', {
         month: '2-digit',
         day: '2-digit',
@@ -645,21 +508,9 @@ submitWishesBtn.addEventListener('click', () => {
     let wishEntry = {
         name: name,
         date: date,
-        type: activeTab
+        type: "text",
+        message: textMsg
     };
-    
-    if (activeTab === 'written') {
-        const textMsg = guestTextInput.value.trim();
-        if (!textMsg) {
-            alert("Please type a message before submitting.");
-            return;
-        }
-        wishEntry.message = textMsg;
-    } else {
-        // Export drawing canvas as image
-        const imgData = drawCanvas.toDataURL();
-        wishEntry.message = imgData;
-    }
     
     // Save to list
     const currentWishes = getWishes();
@@ -669,7 +520,6 @@ submitWishesBtn.addEventListener('click', () => {
     // Clear Form Fields
     guestNameInput.value = '';
     guestTextInput.value = '';
-    clearCanvas();
     
     // Refresh board
     renderWishes();

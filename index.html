@@ -149,20 +149,26 @@
                 </div>
                 <div class="cards-grid">
                     <div class="detail-card card-luxury reveal">
-                        <div class="icon"><i class="fa-solid fa-calendar-heart text-gold"></i></div>
+                        <div class="icon-container">
+                            <div class="icon"><i class="fa-solid fa-calendar-days text-gold"></i></div>
+                        </div>
                         <h3>Date & Time</h3>
                         <p class="highlight-text">Thursday, Sept 15, 2026</p>
                         <p>Guest reception begins at 7:00 PM</p>
                     </div>
                     <div class="detail-card card-luxury reveal">
-                        <div class="icon"><i class="fa-solid fa-map-location-dot text-gold"></i></div>
+                        <div class="icon-container">
+                            <div class="icon"><i class="fa-solid fa-map-location-dot text-gold"></i></div>
+                        </div>
                         <h3>The Venue</h3>
                         <p class="highlight-text">The Ritz-Carlton Hotel</p>
                         <p>Cairo, Grand Ballroom</p>
                         <a href="#map-section" class="btn-secondary">View Location Map</a>
                     </div>
                     <div class="detail-card card-luxury reveal">
-                        <div class="icon"><i class="fa-solid fa-envelope-open-text text-gold"></i></div>
+                        <div class="icon-container">
+                            <div class="icon"><i class="fa-solid fa-envelope-open-text text-gold"></i></div>
+                        </div>
                         <h3>Important Notes</h3>
                         <p class="highlight-text">Strict Formal Attire</p>
                         <p>We love your children, but this is an adult-only reception.</p>
@@ -257,59 +263,12 @@
                     <div class="decorative-crown">✨</div>
                     <h2>Wedding Guestbook</h2>
                     <div class="divider"></div>
-                    <p>Leave a written wish or draw/sign a custom message for us!</p>
+                    <p>Leave a beautiful written message for us!</p>
                 </div>
 
                 <div class="guestbook-container card-luxury reveal">
-                    <!-- Tab Toggles -->
-                    <div class="guestbook-tabs">
-                        <button id="tab-drawn" class="tab-btn active">Drawn Message</button>
-                        <button id="tab-written" class="tab-btn">Written Message</button>
-                    </div>
-
-                    <!-- Drawn Message Content -->
-                    <div id="drawn-content" class="tab-panel active">
-                        <!-- Canvas Controls -->
-                        <div class="canvas-controls">
-                            <div class="control-row">
-                                <span class="control-label">Color:</span>
-                                <div class="color-palette">
-                                    <button class="color-btn active" data-color="#000000" style="background-color: #000000;"></button>
-                                    <button class="color-btn" data-color="#ff4757" style="background-color: #ff4757;"></button>
-                                    <button class="color-btn" data-color="#2ed573" style="background-color: #2ed573;"></button>
-                                    <button class="color-btn" data-color="#1e90ff" style="background-color: #1e90ff;"></button>
-                                    <button class="color-btn" data-color="#ffa502" style="background-color: #ffa502;"></button>
-                                    <button class="color-btn" data-color="#bfa15f" style="background-color: #bfa15f;"></button>
-                                </div>
-                            </div>
-                            
-                            <div class="control-row">
-                                <span class="control-label">Width:</span>
-                                <div class="width-selectors">
-                                    <button class="width-btn" data-width="2">Thin</button>
-                                    <button class="width-btn active" data-width="5">Medium</button>
-                                    <button class="width-btn" data-width="10">Thick</button>
-                                    <button class="width-btn" data-width="18">Bold</button>
-                                </div>
-                            </div>
-
-                            <div class="status-bar">
-                                <span id="current-settings"><i class="fa-solid fa-paintbrush"></i> Color: Black | Size: Medium</span>
-                            </div>
-                        </div>
-
-                        <!-- Canvas Drawing Board -->
-                        <div class="canvas-wrapper">
-                            <canvas id="drawing-board" width="550" height="350"></canvas>
-                        </div>
-                        
-                        <div class="canvas-actions">
-                            <button id="clear-canvas-btn" class="btn-secondary"><i class="fa-solid fa-trash-can"></i> Clear Board</button>
-                        </div>
-                    </div>
-
                     <!-- Written Message Content -->
-                    <div id="written-content" class="tab-panel">
+                    <div id="written-content">
                         <div class="form-group">
                             <textarea id="guestbook-text" rows="8" placeholder="Write your heartfelt wishes here..."></textarea>
                         </div>
